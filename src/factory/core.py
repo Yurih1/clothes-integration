@@ -67,6 +67,8 @@ class UpdateUserCore:
             encrypt_password = self.create_user.encrypt_password(new_password)
             
             self.user_models.update_username(encrypt_password)
+            
+            print(f"printa a senha ai pra noisssss: {new_password}")
               
             return HTTPStatus.CREATED
 

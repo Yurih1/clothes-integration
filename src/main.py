@@ -58,7 +58,7 @@ def forgot_user(mail: EmailUser):
     
     user = instance.get_user_by_mail()
     
-    return "teste"
+    return user
 
 
 if __name__ == "__main__":
