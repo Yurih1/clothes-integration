@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from factory.core import CreateUserCore, UpdateUserCore
+from utils.core import CreateUserCore, UpdateUserCore
 import requests
 import uvicorn
 from factory.parameter import UserData, EmailUser
@@ -19,6 +19,7 @@ async def post_create_contact(data: UserData):
     instance = CreateUserCore()
 
     # TODO: cria o id do user. COM O BD PRONTO, FAZER UM TRY AQUI
+    #varificar se já não existe na base
     id_generated = instance.create_id_to_client()
 
     # Cria hash da senha

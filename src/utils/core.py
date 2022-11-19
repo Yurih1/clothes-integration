@@ -20,7 +20,7 @@ class CreateUserCore:
 
         new_id = uuid.uuid4()
 
-        return new_id
+        return str(new_id)
 
     @staticmethod
     def encrypt_password(password: str) -> str:
@@ -60,15 +60,11 @@ class UpdateUserCore:
 
             random.shuffle(password)
             new_password = "".join(password)
-
-            print(f"SENHA GERADA: {new_password}")
-            # TODO: com o bd criado, salvar no banco e envia por email a nova senha. 
             
+            # TODO: com o bd criado, salvar no banco e envia por email a nova senha. 
             encrypt_password = self.create_user.encrypt_password(new_password)
             
             self.user_models.update_username(encrypt_password)
-            
-            print(f"printa a senha ai pra noisssss: {new_password}")
               
             return HTTPStatus.CREATED
 
