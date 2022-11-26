@@ -1,9 +1,9 @@
 from fastapi import FastAPI
-from utils.core import CreateUserCore, UpdateUserCore
+from contact_handlers.handlers import CreateUserHandlers, UpdateUserHandlers
+from contact_handlers.parameter_contact import *
+from contact_handlers.models import User
 import requests
 import uvicorn
-from factory.parameter import UserData, EmailUser
-from factory.models import User
 
 app = FastAPI()
 
@@ -16,25 +16,19 @@ def path_default():
 
 @app.post("/create_contact/")
 async def post_create_contact(data: UserData):
-    instance = CreateUserCore()
+    instance = CreateUserHandlers(data.username)
 
-    # TODO: cria o id do user. COM O BD PRONTO, FAZER UM TRY AQUI
-    #varificar se já não existe na base
-    id_generated = instance.create_id_to_client()
+    created_contact = instance.create_contact(data)
 
-    # Cria hash da senha
-    create_hash_pass = instance.encrypt_password(data.password)
+    return created_contact
 
-    data = {
-        "id": id_generated,
-        "usuario": data.username,
-        "senha": create_hash_pass
-    }
+@app.post("/update_contact")
+def post_update_contact(data: FullDataUser):
+    user_data = UpdateUserHandlers(data.email)
+    
+    result = user_data.update_full_data_contact(data)
 
-    # TODO: feature: Aqui será enviado para o bd os dados do novo usuario do sistema. 
-    # TODO: Se 201, retorna um sucess para a requisição. se não o status code do erro.
-    return {"data": data}
-
+    return result
 
 @app.get("/address/{cep}")
 def search_address_by_cep(cep: str):
@@ -43,8 +37,8 @@ def search_address_by_cep(cep: str):
 
 
 @app.post("/new_password/")
-def post_update_password(mail: EmailUser):
-    instance = UpdateUserCore(mail.mail)
+def post_update_password(email: EmailUser):
+    instance = UpdateUserHandlers(email.email)
     
     new_password = instance.new_password_generator()
 
@@ -52,14 +46,6 @@ def post_update_password(mail: EmailUser):
         return "Nova senha criada e enviada por e-mail."
     else:
         return "Ocorreu algum erro ao gerar uma nova senha. Tente novamente mais tarde."
-
-@app.post("/forgot_user/")
-def forgot_user(mail: EmailUser):
-    instance = User(mail.mail)
-    
-    user = instance.get_user_by_mail()
-    
-    return user
 
 
 if __name__ == "__main__":
