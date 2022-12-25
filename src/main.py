@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from contact_handlers.handlers import CreateUserHandlers, UpdateUserHandlers
 from contact_handlers.parameter_contact import *
-from contact_handlers.models import User
 import requests
 import uvicorn
+from decouple import config
 
 app = FastAPI()
 
@@ -32,7 +32,7 @@ def post_update_contact(data: FullDataUser):
 
 @app.get("/address/{cep}")
 def search_address_by_cep(cep: str):
-    response = requests.get(f"http://viacep.com.br/ws/{cep}/json/")
+    response = requests.get(config("VIACEP") + f"{cep}" + "/json/")
     return response.json()
 
 
