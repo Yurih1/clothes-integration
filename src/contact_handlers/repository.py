@@ -1,4 +1,7 @@
-class UserRepository:
+from utils.db import Connection
+
+
+class UserRepository(Connection):
     
     def __init__(self, email: str) -> None:
         self.email = email
@@ -6,11 +9,10 @@ class UserRepository:
     def create_new_contact(self, data: dict):
         query = f"""
             INSERT INTO 
-                contato (id, email, password)
-                VALUES ({data['id']}, {data['usuario']}, {data['password']})
+                usuario (id, email, nome)
+                VALUES (2, {data['usuario']}, {data['password']})
         """
-        
-        #TODO: execute query.
+        self.execute(query)
     
     def update_password(self, password: str, id: str) -> None:
         query = f"""
@@ -21,7 +23,7 @@ class UserRepository:
             WHERE id = '{id}';
         """
         
-        #TODO: execute query.
+        self.execute(query)
     
     def get_id_by_contact_email(self) -> str:
         query = f"""
@@ -31,9 +33,9 @@ class UserRepository:
             WHERE email = '{self.email}'
         """
         
-        #TODO: execute query.
+        result = self.execute(query)
         
-        return "1234"
+        return result
         
     def update_all_data_contact(self, contact_data: dict, contact_id):
         query = f"""
@@ -53,4 +55,4 @@ class UserRepository:
             WHERE id = '{self.email}';
         """
         
-        #TODO: execute query.
+        self.execute(query)
