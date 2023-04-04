@@ -3,7 +3,7 @@ from contact_handlers.handlers import CreateUserHandlers, UpdateUserHandlers
 from contact_handlers.parameter_contact import *
 import requests
 import uvicorn
-from decouple import config
+import os
 
 app = FastAPI()
 
@@ -32,11 +32,11 @@ def post_update_contact(data: FullDataUser):
 
 @app.get("/address/{cep}")
 def search_address_by_cep(cep: str):
-    response = requests.get(config("VIACEP") + f"{cep}" + "/json/")
+    response = requests.get(os.environ["VIACEP"] + f"{cep}" + "/json/")
     return response.json()
 
 
-@app.post("/new_password/")
+@app.post("/new_password")
 def post_update_password(email: EmailUser):
     instance = UpdateUserHandlers(email.email)
     
